@@ -22,7 +22,6 @@ A simple web application that allows users to get movie recommendations based on
 - **API:** RESTful endpoints
 
 ---
-
 ## Installation
 
 1. Clone the repository:
