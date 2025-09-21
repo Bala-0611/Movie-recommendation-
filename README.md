@@ -23,13 +23,6 @@ A simple web application that allows users to get movie recommendations based on
 
 ---
 
-## Demo
-
-![Demo Screenshot](screenshot.png)  
-*(You can add a screenshot of your app here)*
-
----
-
 ## Installation
 
 1. Clone the repository:
