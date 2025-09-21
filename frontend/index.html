@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendation System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4CAF50; /* Green */
+            --primary-dark: #388E3C;
+            --secondary-color: #FFC107; /* Amber */
+            --background-light: #f9f9f9;
+            --background-dark: #e0e0e0;
+            --text-color: #333;
+            --border-color: #ccc;
+            --shadow-color: rgba(0,0,0,0.1);
+            --header-bg: #2196F3; /* Blue */
+            --header-text: #fff;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-light);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to the top, not center vertically */
+            min-height: 100vh; /* Ensure it takes full viewport height */
+            padding-top: 40px; /* Add some space from the top */
+        }
+
+        .container {
+            max-width: 900px;
+            width: 90%;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            margin-bottom: 40px; /* Space at the bottom */
+        }
+
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+            margin: -30px -30px 30px -30px; /* Extend header to container edges */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 15px; /* Space between elements */
+        }
+
+        .input-group label {
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--text-color);
+        }
+
+        .input-group input[type="text"] {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+            max-width: 350px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .input-group input[type="text"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.2);
+            outline: none;
+        }
+
+        .input-group button {
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .input-group button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        .input-group button:active {
+            transform: translateY(0);
+        }
+
+        #recommendations {
+            margin-top: 30px;
+            border-top: 2px solid var(--background-dark);
+            padding-top: 30px;
+        }
+
+        #recommendations h2 {
+            text-align: center;
+            color: var(--header-bg);
+            font-size: 2em;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        #recommendations h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--secondary-color);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        .movie-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+            gap: 20px;
+        }
+
+        .movie-item {
+            background: var(--background-dark);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .movie-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .movie-item span:first-child {
+            font-weight: 700;
+            font-size: 1.2em;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+        .movie-item span:last-child {
+            font-size: 0.95em;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-weight: 700;
+        }
+
+        .error-message, .no-results {
+            color: #D32F2F; /* Red for errors */
+            background-color: #FFEBEE; /* Light red background */
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 500;
+            border: 1px solid #EF9A9A;
+        }
+        .no-results {
+            color: #666;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+        }
+
+        @media (max-width: 600px) {
+            .input-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .input-group input, .input-group button {
+                width: 100%;
+                max-width: none;
+            }
+            .input-group label {
+                margin-bottom: 5px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            #recommendations h2 {
+                font-size: 1.5em;
+            }
+            .movie-list {
+                grid-template-columns: 1fr; /* Single column on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Movie Recommendation System</h1>
+        </header>
+
+        <div class="input-group">
+            <label for="genreInput">Enter Genre:</label>
+            <input type="text" id="genreInput" placeholder="e.g., Science Fiction, Action, Drama">
+            <button id="recommendButton">Recommend</button>
+        </div>
+
+        <div id="recommendations">
+            <h2>Recommended Movies</h2>
+            <p id="errorMessage" class="error-message"></p>
+            <ul class="movie-list" id="movieList">
+                <!-- Movie recommendations will be displayed here -->
+            </ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
